@@ -52,8 +52,8 @@ int main(void){
     //int col = fil*2-1;
     for(int i=1; i<=fil; i++){
         for(int j=1; j<=col; j++){
-            if(j>=fil-i+1 && j<=fil+i-1)
-                printf("* ");
+            if(i==fil || j==fil-i+1)
+                printf("%d ", j);
             else
                 printf(" ");
             
