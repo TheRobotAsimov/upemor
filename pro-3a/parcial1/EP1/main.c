@@ -59,12 +59,13 @@ int main(){
                     b = a % b;
                     a = temp;
                 }
-                if (a == 1 && i != 1) {
+                if (a == 1) {
                     printf("el numero %d es coprimo de %d\n", i,numero);
                 }
             }
 
-            printf("\n");
+            printf("\nDesea regresar al menu? (si=1, no=0): ");
+            scanf("%d", &opcion);
             break;
         
         //-----------------------------------------------------//
@@ -73,7 +74,7 @@ int main(){
             do{
                 printf("___________________________\n");
                 printf("___________________________\n\n");
-                printf("\tNombre del cliente: ");
+                printf("Nombre del cliente: ");
                 scanf(" %[^\n]%*c", nom[i]);
                 i=i++;
                 
@@ -117,9 +118,9 @@ int main(){
                     }
                 }
                 
-                printf("\nVolver a realizar la accion (si=0 no=1): ");
+                printf("\nVolver a realizar la accion (si=1 no=0): ");
                 scanf("%d%*c", &opc);
-            }while(opc==0);
+            }while(opc==1);
             break;
         
         //-----------------------------------------------------//
