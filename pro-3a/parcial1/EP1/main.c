@@ -2,9 +2,16 @@
 
 int main(){
     int opcion;
-
-    int fila, columna, altura, espacios;
+    // variables de Dibujar Figura
+    int fila, columna, altura, espacios, i, j;
     char opcFig;
+    // variables de Numeros Coprimos
+    int numero, rango, rango1,a,b,temp;
+    // variables de Cargos de Electricidad
+    char nom[500][30];
+    int ant, act, dif, dif1, dif2, opc;
+    float cobro, bas, inter, exced;
+
 
     printf(" --------------------------------------------- \n");
     printf("|     EP1: Uso de estructuras de control      | \n");
@@ -33,13 +40,86 @@ int main(){
         //-----------------------------------------------------//
 
         case 1:
-            printf("Opcion 1\n");
+            printf("Ingrese un número: ");
+            scanf("%d", &numero);
+
+            printf("Ingrese el rango minimo: ");
+            scanf("%d", &rango);
+            
+            printf("Ingrese el rango maximo: ");
+            scanf("%d", &rango1);
+
+            printf("Números coprimos con %d en el rango de %d a %d:\n", numero, rango,rango1);
+
+            for ( i = rango; i <= rango1; i++) {
+                a = numero;
+                b = i;
+                while (b != 0) {
+                    temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                if (a == 1 && i != 1) {
+                    printf("el numero %d es coprimo de %d\n", i,numero);
+                }
+            }
+
+            printf("\n");
             break;
         
         //-----------------------------------------------------//
 
         case 2:
-            printf("Opcion 2\n");
+            do{
+                printf("___________________________\n");
+                printf("___________________________\n\n");
+                printf("\tNombre del cliente: ");
+                scanf(" %[^\n]%*c", nom[i]);
+                i=i++;
+                
+                printf("Ingresa la medicion de consumo anterior: kWh ");
+                scanf("%d", &ant);
+                printf("Ingresa la medición de consumo actual:   kWh ");
+                scanf("%d", &act);
+                
+                dif=ant-act;
+                
+                if(dif<0){
+                    dif=dif*-1;
+                }
+                
+                if(dif<=150){
+                    cobro=(float)(dif*bas);
+                }
+                if(dif>150){
+                    dif1=dif-150;
+                    if(dif1<200){
+                        cobro=(float)((150*bas)+(dif1*inter));
+                    }else{
+                        dif2=dif1-200;
+                        cobro=(float)((150*bas)+(200*inter)+(dif2*exced));
+                    }
+                }
+                
+                printf("\nNombre del cliente: %s\nConsumo total: %d\t", nom[i], dif);
+                printf("\nCobro Final: %.3f", cobro);
+                
+                if(dif<=150){
+                    printf("\tConsumo Basico");
+                }
+                if(dif>150){
+                    dif1=dif-150;
+                    if(dif1<200){
+                        printf("\tConsumo Basico + Intermedio");
+                    }else{
+                        dif2=dif1-200;
+                        printf("\tConsumo Basico + Intermedio + Excedente");
+                    }
+                }
+                
+                printf("\nVolver a realizar la accion (si=0 no=1): ");
+                scanf("%d%*c", &opc);
+            }while(opc==0);
             break;
         
         //-----------------------------------------------------//
@@ -58,8 +138,8 @@ int main(){
 
             switch (opcFig){
             case 'v':
-                for(int i=0; i<fila; i++){
-                    for(int j=0; j<columna; j++){
+                for(i=0; i<fila; i++){
+                    for(j=0; j<columna; j++){
                         //Ultima horiz  Ultima vert         Diagonal grande                    Linea horizontal superior                     Primera diagonal /              Segunda diagonal /             Primera \                  Segunda \                     Tercera \                   //  
                         if(i==fila-1 || j==columna-1 || j==fila-i-1+(fila*2-2) || i==fila-(fila/2+1) && j>fila/2-1 && j<columna-fila/2 || j==fila-i-1 && i>fila/2 || j==fila-i-1+(fila-1) && i>fila/2 || j==i && i>fila/2 || j==i+(fila-1) && i>fila/2 || j==i+(fila*2-2) && i>fila/2){
                             printf("* ");//             ^
@@ -71,8 +151,8 @@ int main(){
                 }
                 break;
             case 'r':
-                for(int i=0; i<fila; i++){
-                    for(int j=0; j<columna; j++){
+                for(i=0; i<fila; i++){
+                    for(j=0; j<columna; j++){
                         // Trapecio   (  diagonal /,      diagona \  )   Linea vertical      Diagonal grande                               //
                         if(i>=fila/2 && j>=fila-i-1 && j<=i+(fila*2-2) || j==columna-1 || j==fila-i-1+(fila*2-2)){
                             printf("* ");

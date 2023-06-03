@@ -13,10 +13,10 @@ void main(){
         if (num%i==0){
             num/=i;
             printf(" %d *", i);
-            /*if (fact != i){       //Evita los factores repetidos
+            if (fact != i){       //Evita los factores repetidos
                 printf("%d ", i);
                 fact=i;
-            }*/ 
+            }
         }
         else{
             i++;
