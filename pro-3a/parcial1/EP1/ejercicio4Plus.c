@@ -25,7 +25,7 @@ int main(){
         for(int i=0; i<fila; i++){
             for(int j=0; j<columna; j++){
                 //Ultima horiz  Ultima vert         Diagonal grande                    Linea horizontal superior                     Primera diagonal /              Segunda diagonal /             Primera \                  Segunda \                     Tercera \                   //  
-                if(i==fila-1 || j==columna-1 || j==fila-i-1+(fila*2-2) || i==fila-(fila/2+1) && j>fila/2-1 && j<columna-fila/2 || j==fila-i-1 && i>fila/2 || j==fila-i-1+(fila-1) && i>fila/2 || j==i && i>fila/2 || j==i+(fila-1) && i>fila/2 || j==i+(fila*2-2) && i>fila/2){
+                if(i==fila-1 || j==columna-1 || j==fila-i-1+(fila*2-2) || i==fila-(altura) && j>=altura-1 && j<columna-altura || j==fila-i-1 && i>altura-1 || j==fila-i-1+(fila-1) && i>altura-1 || j==i && i>altura-1 || j==i+(fila-1) && i>altura-1 || j==i+(fila*2-2) && i>altura-1){
                     printf("%c ", simbolo);//             ^
                 }else{              //       -1 para que inicie en la orilla
                     printf("  ");   // deberia ser fila*2-1, pero por el for se le resta 1
@@ -38,7 +38,7 @@ int main(){
         for(int i=0; i<fila; i++){
             for(int j=0; j<columna; j++){
                 // Trapecio   (  diagonal /,      diagona \  )   Linea vertical      Diagonal grande                               //
-                if(i>=fila/2 && j>=fila-i-1 && j<=i+(fila*2-2) || j==columna-1 || j==fila-i-1+(fila*2-2)){
+                if(i>=altura-1 && j>=fila-i-1 && j<=i+(fila*2-2) || j==columna-1 || j==fila-i-1+(fila*2-2)){
                     printf("%c ", simbolo);
                 }else{
                     printf("  ");
