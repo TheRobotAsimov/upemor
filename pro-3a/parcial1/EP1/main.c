@@ -1,3 +1,18 @@
+//////////////////////////////////////////////////////////7
+//                                                       //
+//       EP1. Uso de estructuras de control.             //
+//                                                       //
+//      Fecha de entrega:  05/06/2023                    // 
+//                                                       //
+//      Grupo 3ro A ITI                                  //                        
+//                                                       //                                                
+//      Alumnos:                                         //
+//      García Mendoza Isaías     	GMIO220060           //
+//      Gómez García José Alberto  	GGJO222091           //
+//      Prado Acevedo Ian Marcus   	PAIO221489           //
+//                                                       //
+///////////////////////////////////////////////////////////
+
 #include <stdio.h>
 
 int main(){
@@ -147,9 +162,9 @@ int main(){
                     for(j=0; j<columna; j++){
                         //Ultima horiz  Ultima vert         Diagonal grande                    Linea horizontal superior                     Primera diagonal /              Segunda diagonal /             Primera \                  Segunda \                     Tercera \                   //  
                         if(i==fila-1 || j==columna-1 || j==fila-i-1+(fila*2-2) || i==fila-(altura) && j>=altura-1 && j<columna-altura || j==fila-i-1 && i>altura-1 || j==fila-i-1+(fila-1) && i>altura-1 || j==i && i>altura-1 || j==i+(fila-1) && i>altura-1 || j==i+(fila*2-2) && i>altura-1){
-                            printf("* ");//                       ^
-                        }else{              //       -1 para que inicie en la orilla
-                            printf("  ");   // deberia ser fila*2-1, pero por el for se le resta 1
+                            printf("* ");
+                        }else{              
+                            printf("  ");   
                         }
                     }
                     printf("\n");
