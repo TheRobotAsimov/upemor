@@ -138,7 +138,7 @@ int main(){
             fila = altura*2-1;
             columna = fila*3-2;
 
-            printf("Desea la figura vacia o rellena? (v/r): ");
+            printf("Desea la figura vacia o semi rellena? (v/r): ");
             scanf(" %c", &opcFig);
 
             switch (opcFig){
