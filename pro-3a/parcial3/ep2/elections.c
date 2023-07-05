@@ -8,15 +8,15 @@ void initArray(int *array, int size);
 void printArray(int *array, int size);
 
 void setUpElections(int *vQuantity, int vSize, char **candNames, int cSize);
-void elections(int *vQuantity, int **votes, int vSize, int cSize, char **candNames);
-void closeElections(int *array, int size);
+void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames);
+void closeElections(int *vMax, int **votes, int vSize, int cSize, char **candNames);
 
 int menu();
 
 int main()
 {
     int option, sections, candidates, nameLen=50, block1=0, block2=0;
-    int *vQuantity, **votes, *array, size=5;
+    int *vQuantity, **votes;
     char **candNames;
     
     srand(time(NULL));
@@ -59,9 +59,11 @@ int main()
                     printf("\n Primero debe realizar la opcion 1\n");
                 break;
             case 3:
-                if(block1 && block2)
-                    closeElections(array, size);
-                else
+                if(block1 && block2){
+                    closeElections(vQuantity, votes, sections, candidates, candNames);
+                    block1=0;
+                    block2=0;
+                }else
                     printf("\n Antes debe realizar las primeras 2 opciones\n");
                 break;
             case 0:
@@ -119,20 +121,62 @@ void setUpElections(int *vQuantity, int vSize, char **candNames, int cSize)
     }
 }
 
-void elections(int *vQuantity, int **votes, int vSize, int cSize, char **candNames)
+void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
 {
-    int section, candIndex=-1;
+    int section, candIndex=-1, quantity;
     char candidate[50];
     // votes[candidate][section]
     for(int i=0; i<cSize; i++)
         for(int j=0; j<vSize; j++)
-            votes[i][j] = rand()%vQuantity[j];
+            votes[i][j] = rand()%(vMax[j]/2);   // Quitar /2
+
+    for(int j=0; j<vSize; j++)
+        printf("\tS%d", j+1);
+
+    printf("\n\n");
 
     for(int i=0; i<cSize; i++){
+        printf("%s: ", candNames[i]);
         for(int j=0; j<vSize; j++)
-            printf("%5d", votes[i][j]);
+            printf("\t%d", votes[i][j]);
         printf("\n");
     }
+
+    printf("\n");
+
+    printf(" Ingrese la seccion: ");
+    scanf("%d%*c", &section);
+    section--;
+    printf(" Ingrese el candidato: ");
+    scanf(" %[^\n]", candidate);
+
+    printf("\n");
+
+    for(int i=0; i<cSize; i++){
+        if(strcmp(candNames[i], candidate) == 0)
+            candIndex = i;
+    }
+
+    if(candIndex != -1 || (section>=0 && section<vSize)){   // Cambiar if
+        votes[candIndex][section]++;
+
+        for(int j=0; j<vSize; j++)
+            printf("\tS%d", j+1);
+
+        printf("\n\n");
+
+        for(int i=0; i<cSize; i++){
+            printf("%s: ", candNames[i]);
+            for(int j=0; j<vSize; j++)
+                printf("\t%d", votes[i][j]);
+            printf("\n");
+        }
+    }else
+        printf(" No encontrado\n");
+
+    candIndex = -1;
+
+    printf("\n");
 
     printf(" Ingrese la seccion: ");
     scanf("%d%*c", &section);
@@ -145,21 +189,75 @@ void elections(int *vQuantity, int **votes, int vSize, int cSize, char **candNam
             candIndex = i;
     }
 
-    if(candIndex != -1){
-        votes[candIndex][section]++;
+
+    if(candIndex == -1 || section<0 || section>=vSize)
+        printf(" No encontrado\n");
+    else{
+        printf(" Ingrese la cantidad de votos que desea agregar: ");
+        scanf("%d%*c", &quantity);
+
+        votes[candIndex][section] += quantity;
+
+        printf("\n");
+
+        for(int j=0; j<vSize; j++)
+            printf("\tS%d", j+1);
+
+        printf("\n\n");
 
         for(int i=0; i<cSize; i++){
+            printf("%s: ", candNames[i]);
             for(int j=0; j<vSize; j++)
-                printf("%5d", votes[i][j]);
+                printf("\t%d", votes[i][j]);
             printf("\n");
         }
-    }else
-        printf("No encontrado\n");
+    }
 }
 
-void closeElections(int *array, int size)
+void closeElections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
 {
-    printf("\n yes\n");
+    int candSum[cSize], sectSum[vSize];
+
+    for(int i=0; i<cSize; i++)
+        candSum[i]=0;
+
+    for(int i=0; i<vSize; i++)
+        sectSum[i]=0;
+
+    // Suma por candidatos
+    for(int i=0; i<cSize; i++)
+        for(int j=0; j<vSize; j++)
+            candSum[i]+=votes[i][j];
+
+    // Suma por seccion
+    for(int i=0; i<vSize; i++)
+        for(int j=0; j<cSize; j++)
+            sectSum[i]+=votes[j][i];
+
+    int max = 0, maxInd;  // Agregar empate
+
+    for(int i=0; i<cSize; i++)
+        if(candSum[i]>max){
+            max = candSum[i];
+            maxInd = i;   
+        }
+
+    int valido=1;
+
+    printf("\n");
+
+    for(int i=0; i<vSize; i++){
+        if(sectSum[i]>vMax[i]){
+            printf(" La seccion %d sobrepaso el limite de votos\n", i+1);
+            valido=0;
+        }
+    }
+
+    if(valido){
+        printf(" El ganador fue %s\n", candNames[maxInd]);
+        for(int i=0; i<cSize; i++)
+            printf("  - %s tuvo %d votos\n", candNames[i], candSum[i]);
+    }
 }
 
 int menu()
