@@ -157,7 +157,7 @@ void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
             candIndex = i;
     }
 
-    if(candIndex != -1 || (section>=0 && section<vSize)){   // Cambiar if
+    if(candIndex != -1 && section>=0 && section<vSize){   // Cambiar if
         votes[candIndex][section]++;
 
         for(int j=0; j<vSize; j++)
