@@ -4,27 +4,26 @@
 ////////////////////
 #include <time.h>
 
-void initArray(int *array, int size);
-void printArray(int *array, int size);
-
 void setUpElections(int *vQuantity, int vSize, char **candNames, int cSize);
-void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames);
+
+void option2(int *vMax, int **votes, int vSize, int cSize, char **candNames);
+void initElections(int *vMax, int **votes, int vSize, int cSize);
+void printElections(int **votes, int vSize, int cSize, char **candNames);
+void add1Vote(int **votes, int vSize, int cSize, char **candNames);
+void addVotes(int **votes, int vSize, int cSize, char **candNames);
+
 void closeElections(int *vMax, int **votes, int vSize, int cSize, char **candNames);
 
 int menu();
+int menu2();
 
 int main()
 {
-    int option, sections, candidates, nameLen=50, block1=0, block2=0;
+    int option, sections, candidates, nameLen=50, block1=1, block2=1;
     int *vQuantity, **votes;
     char **candNames;
     
     srand(time(NULL));
-   
-    /*printf("\n");
-    initArray(array1, size1);
-    printArray(array1, size1);
-    printf("\n\n");*/
     
     printf(" Ingrese la cantidad de secciones: ");
     scanf("%d", &sections);
@@ -49,27 +48,27 @@ int main()
         {
             case 1:
                 setUpElections(vQuantity, sections, candNames, candidates);
-                block1=1;
+                block1=0;
                 break;
             case 2:
-                if(block1){
-                    elections(vQuantity, votes, sections, candidates, candNames);
-                    block2=1;
+                if(block1 == 0){
+                    option2(vQuantity, votes, sections, candidates, candNames);
+                    block2=0;
                 }else
                     printf("\n Primero debe realizar la opcion 1\n");
                 break;
             case 3:
-                if(block1 && block2){
+                if(block1 == 0 && block2 == 0){
                     closeElections(vQuantity, votes, sections, candidates, candNames);
-                    block1=0;
-                    block2=0;
+                    block1=1;
+                    block2=1;
                 }else
                     printf("\n Antes debe realizar las primeras 2 opciones\n");
                 break;
             case 0:
                 break;    
             default:
-                printf("Default\n");
+                printf(" Opcion no valida\n");
                 break;
         }
     } while(option!=0);
@@ -80,20 +79,13 @@ int main()
         free(candNames[i]);
         
     free(candNames);
-    
+
+    for(int i=0; i<candidates; i++)
+        free(votes[i]);
+
+    free(votes);
+
     return 0;
-}
-
-void initArray(int *array, int size)
-{
-    for(int i=0; i<size; i++)
-        array[i]=rand()%50+1;
-}
-
-void printArray(int *array, int size)
-{
-    for(int i=0; i<size; i++)
-        printf("%5d", array[i]);
 }
 
 void setUpElections(int *vQuantity, int vSize, char **candNames, int cSize)
@@ -121,14 +113,17 @@ void setUpElections(int *vQuantity, int vSize, char **candNames, int cSize)
     }
 }
 
-void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
+void initElections(int *vMax, int **votes, int vSize, int cSize)
 {
-    int section, candIndex=-1, quantity;
-    char candidate[50];
     // votes[candidate][section]
     for(int i=0; i<cSize; i++)
         for(int j=0; j<vSize; j++)
             votes[i][j] = rand()%(vMax[j]/2);   // Quitar /2
+}
+
+void printElections(int **votes, int vSize, int cSize, char **candNames)
+{
+    printf("\t%*s", 30, "");
 
     for(int j=0; j<vSize; j++)
         printf("\tS%d", j+1);
@@ -136,21 +131,58 @@ void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
     printf("\n\n");
 
     for(int i=0; i<cSize; i++){
-        printf("%s: ", candNames[i]);
+        printf("%30s: ", candNames[i]);
         for(int j=0; j<vSize; j++)
             printf("\t%d", votes[i][j]);
         printf("\n");
     }
 
     printf("\n");
+}
 
-    printf(" Ingrese la seccion: ");
+void add1Vote(int **votes, int vSize, int cSize, char **candNames)
+{
+    int section, candIndex=-1;
+    char *candidate; // hacer dinamico
+    
+    candidate = (char*)malloc(30*sizeof(char));
+
+    printf(" Ingrese la seccion (solo el numero): ");
     scanf("%d%*c", &section);
     section--;
     printf(" Ingrese el candidato: ");
     scanf(" %[^\n]", candidate);
 
     printf("\n");
+
+    for(int i=0; i<cSize; i++){
+        if(strcmp(candNames[i], candidate) == 0)
+            candIndex = i;
+    }
+
+    if(candIndex != -1 && section>=0 && section<vSize)
+    { 
+        votes[candIndex][section]++;
+    }else
+    {
+        printf("%*s", 30, "");
+        printf(" No encontrado\n");
+    }
+    printf("\n");
+}
+
+void addVotes(int **votes, int vSize, int cSize, char **candNames)
+{
+    int section, candIndex=-1, quantity;
+    char *candidate; // hacer dinamico
+    
+    candidate = (char*)malloc(30*sizeof(char));
+
+    printf(" Ingrese la seccion (solo el numero): ");
+    scanf("%d%*c", &section);
+    section--;
+    printf(" Ingrese el candidato: ");
+    scanf(" %[^\n]", candidate);
 
     for(int i=0; i<cSize; i++){
         if(strcmp(candNames[i], candidate) == 0)
@@ -158,60 +190,19 @@ void elections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
     }
 
     if(candIndex != -1 && section>=0 && section<vSize){   // Cambiar if
-        votes[candIndex][section]++;
-
-        for(int j=0; j<vSize; j++)
-            printf("\tS%d", j+1);
-
-        printf("\n\n");
-
-        for(int i=0; i<cSize; i++){
-            printf("%s: ", candNames[i]);
-            for(int j=0; j<vSize; j++)
-                printf("\t%d", votes[i][j]);
-            printf("\n");
-        }
-    }else
-        printf(" No encontrado\n");
-
-    candIndex = -1;
-
-    printf("\n");
-
-    printf(" Ingrese la seccion: ");
-    scanf("%d%*c", &section);
-    section--;
-    printf(" Ingrese el candidato: ");
-    scanf(" %[^\n]", candidate);
-
-    for(int i=0; i<cSize; i++){
-        if(strcmp(candNames[i], candidate) == 0)
-            candIndex = i;
-    }
-
-
-    if(candIndex == -1 || section<0 || section>=vSize)
-        printf(" No encontrado\n");
-    else{
         printf(" Ingrese la cantidad de votos que desea agregar: ");
         scanf("%d%*c", &quantity);
 
-        votes[candIndex][section] += quantity;
-
         printf("\n");
 
-        for(int j=0; j<vSize; j++)
-            printf("\tS%d", j+1);
-
-        printf("\n\n");
-
-        for(int i=0; i<cSize; i++){
-            printf("%s: ", candNames[i]);
-            for(int j=0; j<vSize; j++)
-                printf("\t%d", votes[i][j]);
-            printf("\n");
-        }
+        votes[candIndex][section] += quantity;
+    }else
+    {
+        printf("%*s", 30, "");
+        printf(" No encontrado\n");
     }
+    
+    printf("\n");
 }
 
 void closeElections(int *vMax, int **votes, int vSize, int cSize, char **candNames)
@@ -275,3 +266,55 @@ int menu()
     return option;
 }
 
+int menu2()
+{
+    int option;
+    
+    printf("\n Elecciones\n");
+    printf(" 1. Inicializar arreglo de votos\n");
+    printf(" 2. Agregar un voto\n");
+    printf(" 3. Agregar votos\n");
+    printf(" 0. Volver al menu\n\n");
+    printf(" Ingrese la opcion que desee: ");
+    scanf("%d", &option);
+    
+    return option;
+}
+
+void option2(int *vMax, int **votes, int vSize, int cSize, char **candNames)
+{
+    int option, block = 1;
+    do
+    {
+        option = menu2();
+        switch (option)
+        {
+        case 1:
+            initElections(vMax, votes, vSize, cSize);
+            printElections(votes, vSize, cSize, candNames);
+            block = 0;
+            break;
+        case 2:
+            if(block == 0)
+            {
+                add1Vote(votes, vSize, cSize, candNames);
+                printElections(votes, vSize, cSize, candNames);
+            } else
+                printf("\n Primero debe realizar la inicializacion\n");
+            break;
+        case 3:
+            if(block == 0)
+            {
+                addVotes(votes, vSize, cSize, candNames);
+                printElections(votes, vSize, cSize, candNames);
+            } else
+                printf("\n Primero debe realizar la inicializacion\n");
+            break;
+        case 0:
+            break;
+        default:
+            printf(" Opcion no valida\n");
+            break;
+        }
+    } while (option != 0);
+}
