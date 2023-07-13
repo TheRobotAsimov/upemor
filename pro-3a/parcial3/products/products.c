@@ -22,6 +22,8 @@ int main()
                 addProduct(path);
                 break;
             case 2:
+                printf("Ingrese codigo: ");
+                scanf("%d", &code);
                 searchCode(path, code);
                 break;
             case 3:
@@ -88,8 +90,33 @@ int addProduct(char path[])
 int searchCode(char path[], int code)
 {
     FILE *archPointer;
+    int codeT, quantity;
+    char description[50];
+    float price;
 
+    archPointer = fopen(path, "rt");
 
+    if (archPointer == NULL)
+    {
+        printf("Problemas con el archivo\n");
+        return 0;
+    }
+
+    fscanf(archPointer, "%d; %[^;]; %d; %f", &codeT, description, &quantity, &price); // %[^;] -> todo menos punto y coma
+
+    while (!feof(archPointer))
+    {
+        if (codeT == code)
+        {
+            printf("Producto encontrado :D\n");
+            printf("- Clave: %d, Descripcion: %s, Cantidad: %d, Precio: %.2f\n", codeT, description, quantity, price);  // Imprime lo que leyó
+            fclose(archPointer);
+            return 1;
+        }
+        fscanf(archPointer, "%d; %[^;]; %d; %f", &codeT, description, &quantity, &price); // %[^;] -> todo menos punto y coma
+    }
+    
+    printf("Producto no encontrado :c");
 
     fclose(archPointer);
 
