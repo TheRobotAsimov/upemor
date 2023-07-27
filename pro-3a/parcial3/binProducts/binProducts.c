@@ -256,7 +256,7 @@ int modifyPrice(char path[], int code, float newPrice)
 
             price = newPrice;
 
-            fseek(archPointer, ftell(archPointer) - sizeof(price), SEEK_SET); // ftell da la posición en la está actualmente
+            fseek(archPointer, ftell(archPointer) - sizeof(price), SEEK_SET); // ftell da la posición en la está actualmente. Aquí se regresa un espacio hacia atrás
             fwrite(&price, sizeof(float), 1, archPointer);
             printf("Precio modificado\n");
 
@@ -266,7 +266,6 @@ int modifyPrice(char path[], int code, float newPrice)
         fseek(archPointer, range - sizeof(codeB), SEEK_CUR);
         fread(&codeB, sizeof(int), 1, archPointer);
     }
-    
 
     fclose(archPointer);
 
