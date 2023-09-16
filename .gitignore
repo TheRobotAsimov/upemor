@@ -240,3 +240,6 @@ $RECYCLE.BIN/
 esd-4a/parcial-1/sorting/simple-sorting/bubble-sort
 esd-4a/parcial-1/sorting/simple-sorting/selection-sort
 esd-4a/parcial-1/sorting/simple-sorting/insertion-sort
+esd-4a/parcial-1/sorting/advanced-sorting/quick-sort
+esd-4a/parcial-1/sorting/advanced-sorting/shell-sort
+esd-4a/parcial-1/sorting/advanced-sorting/merge-sort
