@@ -238,3 +238,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,windows,visualstudiocode,node
 
 esd-4a/parcial-1/sorting/simple-sorting/bubble-sort
+esd-4a/parcial-1/sorting/simple-sorting/selection-sort
+esd-4a/parcial-1/sorting/simple-sorting/insertion-sort
