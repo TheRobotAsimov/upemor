@@ -93,11 +93,57 @@ void mergeSort (node **head)
     *head = merge(a, b);
 }
 
+node *listMiddle (node *start, node *last)
+{
+    node *fast;
+    node *slow;
+
+    slow = start;
+    fast = start -> next;
+
+    while (fast != last)
+    {
+        fast = fast -> next;
+
+        if (fast != last)
+        {
+            slow = slow -> next;
+            fast = fast -> next;
+        }
+    }
+
+    return slow;
+}
+
+node *binarySearch (node *head, int searching)
+{
+    node *start = head;
+    node *last = NULL;
+
+    do
+    {
+        node *middle = listMiddle(start, last);
+
+        if (middle == NULL)
+            return NULL;
+        if (middle -> value == searching)
+            return middle;
+        else if (middle -> value < searching)
+            start = middle -> next;
+        else
+            last = middle;
+
+    } while (last == NULL || last != start);
+    
+    return NULL;
+}
+
 int main (void)
 {
     srand(time(NULL));
 
     node *head = NULL;
+    int searching;
 
     insert(&head);
     insert(&head);
@@ -112,6 +158,13 @@ int main (void)
     mergeSort(&head);
 
     printList(head);
+
+    printf("Type the number you're looking for: ");
+    scanf("%d", &searching);
+    if (binarySearch(head, searching) == NULL)
+        printf("Value not present\n");
+    else
+        printf("Value present\n");
 
     return 0;
 }
