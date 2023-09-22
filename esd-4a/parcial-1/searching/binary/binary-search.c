@@ -6,7 +6,7 @@ void setArray (int *array, int arraySize)
 {
     for (int i = 0; i < arraySize; i++)
     {
-        array[i] = rand()%20+1;
+        array[i] = rand()%200+1;
     }
 }
 
@@ -82,10 +82,35 @@ void mergeSort (int *array, int left, int right)
     }
 }
 
+int binarySearch(int *array, int left, int right, int searching)
+{
+    if (left < right)
+    {
+        int middle = left + (right - left) / 2;
+
+        if (array[middle] == searching)
+        {
+            //printf("array[%d] = %d = %d\n", middle, array[middle], searching);
+            return middle;
+        }
+        
+        if (array[middle] > searching)
+            binarySearch(array, left, middle - 1, searching);
+        else if (array[middle] < searching)
+            binarySearch(array, middle + 1, right, searching);
+    }
+    else
+    {
+        return -1;
+    }
+}
+
 int main (void)
 {
     int array[10];
     int arraySize = 10;
+    int searching;
+    int index;
 
     srand(time(NULL));
 
@@ -94,6 +119,14 @@ int main (void)
     // sort function
     mergeSort(array, 0, arraySize - 1);
     printArray(array, arraySize);
+
+    printf("Type the number you are looking for: ");
+    scanf("%d", &searching);
+    index = binarySearch(array, 0, arraySize - 1, searching);
+    if (index != -1)
+        printf("Your number is located in i = %d\n", index);
+    else
+        printf("Your number doesn't exist\n");
 
     return 0;
 }
