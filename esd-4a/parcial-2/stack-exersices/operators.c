@@ -3,6 +3,24 @@
 
 // ([(A+B)*(C+D)])
 
+/* 
+(
+[
+(
+A
++
+B
+)
+*
+(
+C
++
+D
+)
+]
+)
+ */
+
 typedef struct node
 {
     char letter;
@@ -19,17 +37,45 @@ void isPalindrome (node *head, node *headReverse);
 
 int main()
 {
-    char phrase[50];
+    //char phrase[50];
     
-    printf("Ingrese la operacion\n");
-    scanf(" %s", phrase);
+    /* printf("Ingrese la operacion\n");
+    scanf(" %s", phrase); */
     
     node *head = NULL;
     
-    strToStack(&head, phrase);
-    printNode(head);
+    /* strToStack(&head, phrase);
+    printNode(head); */
 
-    if(head == NULL)
+    char letter;
+    int correct = 1;
+
+    printf("Ingrese la expresion (^ para terminar)\n");
+    do
+    {
+        scanf(" %c", &letter);
+        if (letter == '[' || letter == '(')
+        {
+            push(&head, letter);
+        }
+        else if (head == NULL)
+        {
+            if (letter == ')'|| letter == ']')
+            {
+                printf("No quedan mas ( ni [ para cerrar\n");
+                correct = 0;
+            }
+        }
+        else if (head != NULL)
+        {
+            if (letter == ')' && head->letter == '(' || letter == ']' && head->letter == '[')
+                pop(&head);
+        }
+            
+    } while (letter != '^');
+    
+
+    if(head == NULL && correct == 1)
         printf("Operacion correcta\n");
     else
         printf("Operacion incorrecta\n");
@@ -46,6 +92,7 @@ void strToStack (node **head, char *phrase)
             push(head, phrase[i]);
         else if (phrase[i] == ')' && (*head)->letter == '(' || phrase[i] == ']' && (*head)->letter == '[')
             pop(head);
+        printNode(*head);
         //printf("%d", i);
         i++;
     }
@@ -63,12 +110,14 @@ void push (node **head, char addLetter)
 
 void pop (node **head)
 {
+    if (*head == NULL)
+        return;
+
     node *current = *head;
-    
     *head = current->next;
     current->next = NULL;
-    
     free(current);
+    
 }
 
 void empty (node **head)
