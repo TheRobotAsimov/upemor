@@ -24,19 +24,32 @@ int main (void)
 
     createQueue(&front, &last);
 
-    printf("Ingrese la cantidad de elementos de la cola: ");
+    printf("\nIngrese la cantidad de elementos a AGREGAR de la cola: ");
     scanf("%d", &size);
     
     for(int i=1; i<=size; i++)
+    {
         addNode(&front, &last, rand()%20+1);
+        printQueue(last);
+    }
 
-    printQueue(last);
+    //printQueue(last);
 
-    printf("Primero: %d, Ultimo: %d\n", front -> data, last -> data);
+    printf("\tUltimo: %d, Primero: %d\n", last -> data, front -> data);
 
-    removeNode(&front, &last);
+    printf("\nIngrese la cantidad de elementos  a ELIMINAR de la cola: ");
+    scanf("%d", &size);
 
-    printQueue(last);
+    for(int i=1; i<=size; i++)
+    {
+        removeNode(&front, &last);
+        printQueue(last);
+    }
+
+    if(isEmpty(front, last))
+        printf("\tUltimo: NULL, Primero: NULL\n");
+    else
+        printf("\tUltimo: %d, Primero: %d\n", last -> data, front -> data);
 
     return 0;
 }
@@ -54,7 +67,7 @@ void addNode (node **front, node **last, int value)
     newNode -> data = value;
     newNode -> next = *last;
 
-    if (*front == NULL && *last == NULL)
+    if (isEmpty(*front, *last))
     {
         *front = *last = newNode;
     }
@@ -110,6 +123,7 @@ void printQueue (node *last)
 {
     node *current = last;
     
+    printf("\n");
     while (current != NULL)
     {
         printf("%5d -> ", current->data);
