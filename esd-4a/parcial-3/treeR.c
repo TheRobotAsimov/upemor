@@ -70,6 +70,7 @@ int main (void)
 
     printf("\n---------------------------------\n\n");
 
+    printf("PREORDEN:\n\n ");
     preorder(root, 0);
 
     printf("\n---------------------------------\n\n");
