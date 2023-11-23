@@ -5,16 +5,18 @@
 
 typedef struct node
 {
-    int data;
+    char data[50];
     struct node *left;
     struct node *right;
 } node;
 
 void create_tree (node **root);
-node *insert (int data);
-void insert2 (node **root, int data);
-void insert2R (node **root, int data);
+node *insert (char *data);
+void insert2 (node **root, char *data);
+void insert2R (node **root, char *data);
 void print_tree (node *tree, int space);
+void print_leaf (node *tree);
+void search_predecessor (node *tree, char *data);
 // Traversals
 /* 
     Preorder:
@@ -50,7 +52,8 @@ int main (void)
     root -> right -> left = insert (50);
     root -> right -> right = insert (60); */
 
-    int data, times;
+    int times;
+    char data[50];
 
     printf("Ingrese la cantidad de nodos: ");
     scanf("%d", &times);
@@ -58,8 +61,9 @@ int main (void)
     for (int i = 0; i < times; i++)
     {
         printf("Ingrese el dato: ");
-        scanf("%d", &data);
-        insert2(&root, data);
+        scanf(" %[^\n]", data);
+        //insert2(&root, data);
+        insert2R(&root, data);
     }
 
     print_tree(root, 0);
@@ -67,6 +71,21 @@ int main (void)
     printf("\n---------------------------------\n\n");
 
     preorder(root, 0);
+
+    printf("\n---------------------------------\n\n");
+
+    printf("Nodos hoja: ");
+    print_leaf(root);
+    printf("\n");
+
+    printf("\n---------------------------------\n\n");
+
+    printf("Predecesor de: ");
+    scanf(" %[^\n]", data);
+
+    printf("Respuesta: ");
+    search_predecessor(root, data);
+    printf("\n");
 }
 
 void create_tree (node **root)
@@ -74,10 +93,11 @@ void create_tree (node **root)
     *root = NULL;
 }
 
-node *insert (int data)
+node *insert (char *data)
 {
     node *new_node = (node *) malloc (sizeof (node));
-    new_node->data = data;
+    //new_node->data = data;
+    strcpy (new_node -> data, data);
     new_node->left = NULL;
     new_node->right = NULL;
     return new_node;
@@ -92,12 +112,12 @@ void print_tree (node *tree, int space)
         {
             printf("\t");
         }
-        printf ("%d\n", tree -> data);
+        printf ("%s\n", tree -> data);
         print_tree (tree -> left, space + 1);
     }
 }
 
-void insert2 (node **root, int data)
+void insert2 (node **root, char *data)
 {
     // aux is equal to current and aux2 is equal to previous
     node *aux, *aux2;
@@ -114,7 +134,7 @@ void insert2 (node **root, int data)
         {
             aux2 = aux;
             printf("Crear hijo izquierdo (1) o derecho (2)\n");
-            scanf("%d", &option);
+            scanf(" %d", &option);
             if (option == 1)
             {
                 aux = aux -> left;
@@ -140,13 +160,14 @@ void insert2 (node **root, int data)
     printf("\n Nodo creado\n\n");
 }
 
-void insert2R (node **root, int data)
+void insert2R (node **root, char *data)
 {
     int option;
 
     if (*root == NULL)
     {
         *root = insert (data);
+        printf("\n Nodo creado\n\n");
     }
     else
     {
@@ -155,11 +176,11 @@ void insert2R (node **root, int data)
 
         if (option == 1)
         {
-            insert2R ((*root) -> left, data);
+            insert2R (&(*root) -> left, data);
         }
         else
         {
-            insert2R ((*root) -> right, data);
+            insert2R (&(*root) -> right, data);
         }
     }
 }
@@ -173,8 +194,62 @@ void preorder (node *tree, int space)
         {
             printf("\t");
         }
-        printf("%d\n", tree -> data);
+        printf("%s\n", tree -> data);
         preorder (tree -> left, ++space);
         preorder (tree -> right, space);
     }
+}
+
+void print_leaf (node *tree)
+{
+    if (tree)
+    {
+        if (tree -> left == NULL && tree -> right == NULL)
+            printf("  %s  ", tree -> data);
+
+        print_leaf (tree -> left);
+        print_leaf (tree -> right);
+    }
+}
+
+void search_predecessor (node *tree, char *data)
+{
+    if (tree -> left == NULL && tree -> right == NULL)
+        return;
+
+    if (tree -> left == NULL && tree -> right != NULL)
+    {
+        if (strcmp(tree -> right -> data, data) == 0)
+        {
+            printf("  %s  ", tree -> data);
+            return;
+        }
+        
+        search_predecessor (tree -> right, data);
+
+        return;
+    }
+    
+    if (tree -> left != NULL && tree -> right == NULL)
+    {
+        if (strcmp(tree -> left -> data, data) == 0)
+        {
+            printf("  %s  ", tree -> data);
+            return;
+        }
+
+        search_predecessor (tree -> left, data);
+
+        return;
+    }
+
+
+    if (strcmp(tree -> left -> data, data) == 0 || strcmp(tree -> right -> data, data) == 0)
+    {
+        printf("  %s  ", tree -> data);
+        return;
+    }
+    search_predecessor (tree -> left, data);
+    search_predecessor (tree -> right, data);
+    
 }
